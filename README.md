@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <p align="center">
   <a href="https://ng-alain.com">
     <img width="100" src="https://ng-alain.com/assets/img/logo-color.svg">
@@ -6,7 +5,7 @@
 </p>
 
 <h1 align="center">
-地图平台-全域版（Ng Alain版本）
+后台管理（Ng Alain版本）
 </h1>
 
 <div align="center">
@@ -99,4 +98,3 @@ The MIT License (see the [LICENSE](https://github.com/ng-alain/ng-alain/blob/mas
 =======
 # angular-backend
 后台管理系统
->>>>>>> 08f6a41b35afbc95e5a12195de8b504235014d05
