@@ -1,0 +1,61 @@
+<page-header [title]="'权限管理'"></page-header>
+<div class="example-input">
+  <div nz-row [nzGutter]="{ md: 8, lg: 24, xl: 24 }">
+    <div nz-col nzMd="8" nzSm="24">
+      <nz-input-group nzSearch nzSize="large" [nzSuffix]="suffixIconButton" style="width:100%">
+        <input placeholder="根据名称搜索..." nz-input [(ngModel)]="searchValue" (ngModelChange)="onChange($event)" />
+      </nz-input-group>
+      <ng-template #suffixIconButton>
+        <button nz-button nzType="primary" nzSize="large" nzSearch (click)="search()"><i nz-icon type="search" theme="outline"></i></button>
+      </ng-template>
+    </div>
+    <div nz-col nzMd="2" nzSm="24" style="float:right">
+      <button nz-button nzType="primary" (click)="add.showAddModal()">
+        <i nz-icon type="plus"></i>新增
+      </button>
+    </div>
+  </div>
+</div>
+<div style="padding: 1rem; background: #fff;  min-height: 10rem; ">
+  <nz-table #rowSelectionTable [nzData]="displayData">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>名称</th>
+        <th>状态</th>
+        <th>备注</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of rowSelectionTable.data">
+        <td>{{data.id}}</td>
+        <td>{{data.name}}</td>
+        <td>
+          <ng-container *ngIf="data.status==1">
+            <span>
+              <nz-badge nzStatus="success" nzText="正常"></nz-badge>
+            </span>
+          </ng-container>
+          <ng-container *ngIf="data.status==0">
+            <span>
+              <nz-badge nzStatus="error" nzText="异常"></nz-badge>
+            </span>
+          </ng-container>
+        </td>
+        <td>{{data.describe}}</td>
+        <td>
+          <a (click)="edit.showModal(data)">
+              <i nz-icon type="edit"></i>编辑</a>
+          <nz-divider nzType="vertical"></nz-divider>
+          <a (click)="showDeleteConfirm(data.id,data.name)">
+              <i nz-icon type="delete"></i> 删除</a>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
+<!-- 编辑页面 -->
+<app-edit-auth #edit (initEmit)="accept()"></app-edit-auth>
+<!-- 新增页面 -->
+<app-add-auth #add (initEmit)="accept()"></app-add-auth>

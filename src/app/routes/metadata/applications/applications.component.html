@@ -1,0 +1,102 @@
+<page-header [title]="'应哟类型'" [action]="action">
+  <ng-template #action>
+    <button nz-button [nzType]="'primary'" (click)="showModal()">添加类型</button>
+  </ng-template>
+</page-header>
+
+<nz-card>
+  <nz-table 
+  #filterTable 
+  [nzData]="displayData"
+  nzShowSizeChanger
+  [nzShowQuickJumper] = "true"
+  >
+    <thead>
+      <tr>
+        <th nzWidth="15%">排序</th>
+        <th nzWidth="25%">Name</th>
+        <th nzWidth="40%">Address</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of filterTable.data">
+        <td>
+            <ng-container *ngIf="!editCache[data.key].edit">
+                {{data.age}}
+            </ng-container>
+            <ng-container *ngIf="editCache[data.key].edit">
+              <nz-input-number [(ngModel)]="editCache[data.key].data.age" [nzMin]="1" [nzMax]="100" [nzStep]="1"></nz-input-number>
+            </ng-container>
+        </td>
+        <td>
+          <div class="editable-cell">
+            <div class="editable-cell-text-wrapper">
+              <ng-container *ngIf="!editCache[data.key].edit">
+                {{data.name}}
+              </ng-container>
+              <ng-container *ngIf="editCache[data.key].edit">
+                <input type="text" nz-input [(ngModel)]="editCache[data.key].data.name">
+              </ng-container>
+            </div>
+          </div>
+        </td>
+        <td>
+          <ng-container *ngIf="!editCache[data.key].edit">
+            {{data.address}}
+          </ng-container>
+          <ng-container *ngIf="editCache[data.key].edit">
+            <input type="text" nz-input [(ngModel)]="editCache[data.key].data.address">
+          </ng-container>
+        </td>
+        <td>
+          <div class="editable-row-operations">
+            <ng-container *ngIf="!editCache[data.key].edit">
+              <a (click)="startEdit(data.key)">编辑</a>
+              <nz-divider nzType="vertical"></nz-divider>
+              <a (click)="startDel(data.key)">删除</a>
+            </ng-container>
+            <ng-container *ngIf="editCache[data.key].edit">
+              <a (click)="saveEdit(data.key)">保存</a>
+              <nz-divider nzType="vertical"></nz-divider>
+              <nz-popconfirm [nzTitle]="'确定取消?'" (nzOnConfirm)="cancelEdit(data.key)">
+                <a nz-popconfirm>取消</a>
+              </nz-popconfirm>
+            </ng-container>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-card>
+
+<nz-modal [(nzVisible)]="isVisible" nzTitle="添加类型" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk(0, 0)" [nzFooter]="modalFooter">
+    <form nz-form [formGroup]="validateForm">
+        <nz-form-item>
+            <nz-form-label [nzSpan]="5" nzRequired>名称</nz-form-label>
+            <nz-form-control [nzSpan]="16">
+                <input nz-input formControlName="userName" placeholder="">
+                <nz-form-explain *ngIf="validateForm.get('userName').dirty && validateForm.get('userName').errors">
+                <ng-container *ngIf="validateForm.get('userName').hasError('required')">
+                    Please input your username!
+                </ng-container>
+                <ng-container *ngIf="validateForm.get('userName').hasError('duplicated')">
+                    The username is redundant!
+                </ng-container>
+                </nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSpan]="5">备注</nz-form-label>
+            <nz-form-control [nzSpan]="16">
+                <textarea rows="4" nz-input formControlName="remark" placeholder=""></textarea>
+            </nz-form-control>
+        </nz-form-item>
+
+        <ng-template #modalFooter>
+            <button nz-button nzType="default" (click)="handleCancel()">取消</button>
+            <button nz-button nzType="primary" [disabled]="!validateForm.valid" (click)="handleOk($event,validateForm.value)">确定</button>
+        </ng-template>
+    </form>
+</nz-modal>

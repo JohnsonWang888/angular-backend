@@ -1,0 +1,119 @@
+<nz-modal [(nzVisible)]="isVisible" nzTitle="修改页面" (nzOnCancel)="handleCancelconfig()" (nzOnOk)="handleCancelconfig()" nzWidth="50%">
+  <form nz-form style="margin-bottom: 1vw;" [formGroup]="configForm">
+    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+      <div nz-col [nzSm]="12" [nzXs]="24" >
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSm]="4" [nzXs]="6"  nzRequired>权限ID</nz-form-label>
+          <nz-form-control [nzSm]="18" [nzXs]="18">
+            <input nz-input  name="configId" type="text" id="configId" [ngModel]="configId" [disabled]="true"  [ngModelOptions]="{standalone: true}">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSm]="12" [nzXs]="24" >
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSm]="4" [nzXs]="6" nzRequired>名称</nz-form-label>
+          <nz-form-control [nzSm]="18" [nzXs]="18">
+            <input nz-input  name="configName" formControlName="configName"  id="configName" [ngModel]="configName">       
+            <nz-form-explain *ngIf="configForm.get('configName').dirty && configForm.get('configName').errors || configForm.get('configName').pending ">
+              <ng-container *ngIf="configForm.get('configName').hasError('required')">
+                请输入您的名称!
+              </ng-container>              
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzSm]="24" [nzXs]="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSm]="2" [nzXs]="6" >类型</nz-form-label>
+          <nz-form-control [nzSm]="21" [nzXs]="18">
+            <nz-select nzMode="tags" style="width: 100%;" nzPlaceHolder="添加类型..." [(ngModel)]="listOfSelectedValue"
+              [ngModelOptions]="{standalone: true}">
+              <nz-option *ngFor="let option of optionalFields" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzSm]="24" [nzXs]="24">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzSm]="2" [nzXs]="6">备注</nz-form-label>
+          <nz-form-control [nzSm]="21" [nzXs]="18">
+            <input formControlName="configRemark" nz-input  [ngModel]="configRemark">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+  <nz-table #deployTable [nzData]="childdata" [nzHideOnSinglePage]="true">
+    <thead>
+      <tr>
+        <th>操作类型</th>
+        <th>描述</th>
+        <th>是否选中</th>
+        <th>操作 <i nz-icon class="anticon anticon-plus" (click)="addRowConfig()" style="cursor: pointer;" nzTitle="添加"
+            nzPlacement="top" nz-tooltip></i></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of deployTable.data">
+        <td>
+          <div class="editable-cell">
+            <div class="editable-cell-text-wrapper">
+              <ng-container *ngIf="!editConfig[data.key].edit">
+                {{data.action}}
+              </ng-container>
+              <ng-container *ngIf="editConfig[data.key].edit">
+                <input type="text" nz-input [(ngModel)]="editConfig[data.key].data.action">
+              </ng-container>
+            </div>
+          </div>
+        </td>
+        <td>
+          <ng-container *ngIf="!editConfig[data.key].edit">
+            {{data.describe}}
+          </ng-container>
+          <ng-container *ngIf="editConfig[data.key].edit">
+            <input type="text" nz-input [(ngModel)]="editConfig[data.key].data.describe">
+          </ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="!editConfig[data.key].edit">
+            {{data.defaultCheck}}
+          </ng-container>
+          <ng-container *ngIf="editConfig[data.key].edit">
+            <nz-select style="width: 100%;" nzShowSearch nzAllowClear nzPlaceHolder="Select a person" [(ngModel)]="editConfig[data.key].data.defaultCheck">
+              <nz-option nzLabel="true" nzValue="true"></nz-option>
+              <nz-option nzLabel="false" nzValue="false"></nz-option>
+            </nz-select>
+          </ng-container>
+        </td>
+        <td>
+          <div class="editable-row-operations">
+            <ng-container *ngIf="!editConfig[data.key].edit">
+              <a (click)="startEditconfig(data.key)" style="margin-right:1vw">编辑</a>
+              <nz-popconfirm [nzTitle]="'确定要删除吗'" (nzOnConfirm)="deleteRowConfig(data.key)">
+                <a nz-popconfirm>删除</a>
+              </nz-popconfirm>
+            </ng-container>
+            <ng-container *ngIf="editConfig[data.key].edit">
+              <a (click)="saveEditconfig(data.key)" style="margin-right:1vw">保存</a>
+              <nz-popconfirm [nzTitle]="'确定要离开吗?'" (nzOnConfirm)="saveEditconfig(data.key)">
+                <a nz-popconfirm>离开</a>
+              </nz-popconfirm>
+            </ng-container>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <div class="modal-footer">
+    <button nz-button type="button" (click)="handleCancelconfig()">取消</button>
+    <button nz-button type="button" [nzType]="'primary'" (click)="confighandleOk()" [nzLoading]="isLoadingTwo" [disabled]="configForm.get('configName').errors">保存</button>
+  </div>
+
+
+</nz-modal>

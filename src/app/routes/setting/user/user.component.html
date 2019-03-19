@@ -1,0 +1,100 @@
+<page-header [title]="'用户管理'">
+  <input type="text" nz-input placeholder="搜索姓名" [(ngModel)]="searchValue" class="input_info">
+  <button nz-button nzType="primary" (click)="search()" class="search">搜索</button>
+  <button nz-button nzType="primary" (click)="reat()" class="react">重置</button>
+  <button nz-button nzType="primary" (click)="addEmpowerment()" class="add_people">添加用户</button>
+</page-header>
+<div style="padding: 1rem; background: #fff;  min-height: 10rem; ">
+  <nz-table #rowSelectionTable [nzData]="data">
+    <thead>
+    <tr>
+      <th>姓名</th>
+      <th>用户名</th>
+      <th>是否启用</th>
+      <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let data of rowSelectionTable.data">
+      <td>{{data.name}}</td>
+      <td>{{data.username}}</td>
+      <td *ngIf="data.status===1">是</td>
+      <td *ngIf="data.status!==1">否</td>
+      <td>
+        <a (click)="edit(data.id)">编辑</a>
+        <nz-divider nzType="vertical"></nz-divider>
+        <a (click)="userEmpowerment(data.id)">用户赋权</a>
+      </td>
+    </tr>
+    </tbody>
+  </nz-table>
+</div>
+
+
+<nz-modal [(nzVisible)]="addEmpowermentVisible" nzTitle="用户管理" (nzOnCancel)="handleCancel()">
+  <sf #sf mode="edit" [schema]="schema" [formData]="params" button="none">
+  </sf>
+
+  <div style="border-bottom: 1px solid rgb(233, 233, 233); margin-bottom:10px">
+    角色
+  </div>
+  <label nz-checkbox [(ngModel)]="allChecked" (ngModelChange)="updateAllChecked()" [nzIndeterminate]="indeterminate"
+         style="margin-right:15px">
+    全选
+  </label>
+  <nz-checkbox-group [(ngModel)]="checkOptionsOne" (ngModelChange)="updateSingleChecked()"></nz-checkbox-group>
+
+
+  <div class="modal-footer">
+    <button nz-button type="button" (click)="handleCancel()">取消</button>
+    <button nz-button type="button" [nzType]="'primary'" (click)="handleOk(sf.value)" [disabled]="!sf.valid">保存
+    </button>
+  </div>
+</nz-modal>
+
+
+<!--<nz-modal [(nzVisible)]="editVisible" nzTitle="编辑用户" (nzOnCancel)="editCancel()" (nzOnOk)="editOk()">-->
+<!--<p>Content one</p>-->
+<!--<p>Content two</p>-->
+<!--<p>Content three</p>-->
+<!--</nz-modal>-->
+
+<nz-modal [(nzVisible)]="userEmpowermentVisible"  nzTitle="用户赋权"
+          (nzOnCancel)="userEmpowermentCancel()" (nzOnOk)="userEmpowermentOk()">
+  <nz-tabset>
+    <nz-tab nzTitle="菜单设置">
+      <nz-tree
+        [nzData]="nodes"
+        nzCheckable="true"
+        nzMultiple="true"
+        [nzShowIcon]="false"
+        [nzCheckedKeys]="defaultCheckedKeys"
+        [nzExpandedKeys]="defaultExpandedKeys"
+        [nzSelectedKeys]="defaultSelectedKeys"
+        (nzCheckBoxChange)="nzEvent($event)">
+      </nz-tree>
+    </nz-tab>
+    <nz-tab nzTitle="权限设置">
+      <nz-tree
+        [nzData]="nodesEmpowerment"
+        nzCheckable="true"
+        nzMultiple="true"
+        [nzCheckedKeys]="defaultCheckedKeysEmpowerment"
+        [nzExpandedKeys]="defaultExpandedKeysEmpowerment"
+        [nzSelectedKeys]="defaultSelectedKeysEmpowerment"
+        (nzCheckBoxChange)="nzEventEmpowerment($event)">
+      </nz-tree>
+    </nz-tab>
+  </nz-tabset>
+
+  <div class="modal-footer">
+    <button nz-button type="button" (click)="userEmpowermentCancel()">取消</button>
+    <button nz-button type="button" [nzType]="'primary'" (click)="userEmpowermentOk()"
+            [disabled]="(!sumbitEmpowermentData)&&(!sumbitMeauData)">保存
+    </button>
+  </div>
+
+</nz-modal>
+<div class="spinning" *ngIf="isSpinning">
+  <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning" [nzDelay]="500" style="margin: auto;"></nz-spin>
+</div>

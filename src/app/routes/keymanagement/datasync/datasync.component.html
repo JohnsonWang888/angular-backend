@@ -1,0 +1,101 @@
+<page-header [title]="'数据分析'">
+  
+</page-header>
+
+<nz-card>
+  <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'" (nzSelectedIndexChange)="selectedIndexChange($event)">
+
+    <nz-tab [nzTitle]="'访问记录'">
+      <form nz-form [formGroup]="validateForm" class="ant-advanced-search-form">
+        <div nz-row [nzGutter]="24">
+          <div nz-col [nzSpan]="6">
+              <nz-form-item>
+                  <nz-form-label [nzSpan]="6">日期</nz-form-label>
+                  <nz-form-control [nzSpan]="18">
+                      <nz-range-picker formControlName="date"></nz-range-picker>
+                  </nz-form-control>
+              </nz-form-item>
+          </div>
+          <div nz-col [nzSpan]="6">
+              <nz-form-item>
+                  <nz-form-label [nzSpan]="6">Key</nz-form-label>
+                  <nz-form-control [nzSpan]="18">
+                      <nz-select style="width: 100%" formControlName="key" nzPlaceHolder="Please select">
+                          <nz-option *ngFor="let option of listOfOption" [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
+                      </nz-select>
+                  </nz-form-control>
+              </nz-form-item>
+          </div>
+          <div nz-col [nzSpan]="6">
+              <nz-form-item>
+                  <nz-form-label [nzSpan]="6">浏览器</nz-form-label>
+                  <nz-form-control [nzSpan]="18">
+                      <nz-select style="width: 100%" formControlName="browser" nzPlaceHolder="Please select">
+                          <nz-option *ngFor="let option of listOfOption" [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
+                      </nz-select>
+                  </nz-form-control>
+              </nz-form-item>
+          </div>
+          <div nz-col [nzSpan]="6">
+              <nz-form-item>
+                  <nz-form-label [nzSpan]="6">IP</nz-form-label>
+                  <nz-form-control [nzSpan]="18">
+                      <input nz-input formControlName="ip" placeholder="">
+                  </nz-form-control>
+              </nz-form-item>
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col [nzSpan]="24" style="text-align: right;">
+            <button nz-button [nzType]="'primary'">查询</button>
+          </div>
+        </div>
+      </form>
+      <div class="search-result-list">
+          <nz-table 
+          #filterTable 
+          [nzData]="displayData"
+          nzShowSizeChanger
+          [nzShowQuickJumper] = "true"
+          >
+            <thead (nzSortChange)="sort($event)">
+              <tr>
+                <th nzWidth="25%">Name</th>
+                <th nzWidth="15%" nzShowSort nzSortKey="age">Age</th>
+                <th nzWidth="40%">Address</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of filterTable.data">
+                <td>
+                  {{data.name}}
+                </td>
+                <td>
+                    {{data.age}}
+                </td>
+                <td>
+                    {{data.address}}
+                </td>
+                <td>
+                    <a (click)="delKey(data.key)">删除</a>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+      </div>
+    </nz-tab>
+
+    <nz-tab [nzTitle]="'统计分析'">
+      <app-statistical></app-statistical>
+    </nz-tab>
+
+  </nz-tabset>
+
+  <div class="search-result-list" *ngIf="isShowG2">
+      <g2-timeline
+      [data]="chartData"
+      [titleMap]="{y1: '客流量', y2: '支付笔数'}">
+    </g2-timeline>
+  </div>
+</nz-card>

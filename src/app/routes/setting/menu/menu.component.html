@@ -1,0 +1,58 @@
+<page-header [title]="'菜单管理'"></page-header>
+
+<nz-card>
+  <button nz-button [nzType]="'primary'" (click)="addMenu()">
+    <i nz-icon type="plus"></i>
+    <span>新建</span>
+  </button>
+  <st #st [data]="users" [columns]="columns" [expand]="expand" expandRowByClick>
+    <ng-template #expand let-item let-index="index" let-column="column">
+      <!--{{ item.description }}-->
+      <nz-table #innerTable [nzData]="item.children" nzSize="middle" [nzShowPagination]="false">
+        <tbody>
+          <tr *ngFor="let data of innerTable.data">
+            <td style="width: 18.3%;">{{data.name}}</td>
+            <td style="width: 16.8%;">{{data.url}}</td>
+            <td style="width: 17%;">{{data.status === 1 ? '开启' : '关闭'}}</td>
+            <td style="width: 17.3%;">{{data.sortIndex}}</td>
+            <td>
+              <ng-container>
+                <a (click)="startEdit(data)"><i nz-icon [type]="'edit'" style="margin-right: 4px;"></i>编辑</a>
+              </ng-container>
+              <nz-divider nzType="vertical"></nz-divider>
+              <nz-popconfirm [nzTitle]="'确认删除么?'" (nzOnConfirm)="deleteRow(data)">
+                <a nz-popconfirm><i nz-icon [type]="'delete'" style="margin-right: 4px;"></i>删除</a>
+              </nz-popconfirm>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </ng-template>
+  </st>
+</nz-card>
+
+<nz-modal [(nzVisible)]="isVisible" nzTitle="菜单编辑" (nzOnCancel)="handleCancel()">
+  <sf #sf mode="edit" [schema]="schema" [formData]="params" button="none">
+    <div class="modal-footer">
+      <button nz-button type="button" (click)="handleCancel()">取消</button>
+      <button nz-button type="button" [nzType]="'primary'" (click)="handleOk(sf.value)" [disabled]="!sf.valid">保存
+      </button>
+    </div>
+  </sf>
+</nz-modal>
+
+<div class="spinning" *ngIf="isSpinning">
+  <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning" [nzDelay]="500" style="margin: auto;"></nz-spin>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+

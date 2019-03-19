@@ -1,0 +1,100 @@
+<page-header [title]="'服务平台'" [action]="action">
+  <ng-template #action>
+    <button nz-button [nzType]="'primary'" (click)="showModal()"><i nz-icon type="plus"></i>添加新平台</button>
+  </ng-template>
+</page-header>
+
+<nz-card>
+  <nz-table
+  #filterTable 
+  [nzData]="displayData"
+  nzShowSizeChanger
+  [nzShowQuickJumper] = "true">
+    <thead (nzSortChange)="sort($event)">
+      <tr>
+        <th nzWidth="15%">Name</th>
+        <th nzWidth="15%">Tags</th>
+        <th nzWidth="15%" nzShowSort nzSortKey="age">Age</th>
+        <th nzWidth="40%">hrefTags</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of filterTable.data">
+        <td>
+          <div class="editable-cell">
+            <div class="editable-cell-text-wrapper">
+              <ng-container *ngIf="!editCache[data.key].edit">
+                {{data.name}}
+              </ng-container>
+              <ng-container *ngIf="editCache[data.key].edit">
+                <input type="text" nz-input [(ngModel)]="editCache[data.key].data.name">
+              </ng-container>
+            </div>
+          </div>
+        </td>
+        <td>
+          <ng-container *ngIf="!editCache[data.key].edit">
+            {{data.tags}}
+          </ng-container>
+          <ng-container *ngIf="editCache[data.key].edit">
+            <nz-tag
+            *ngFor="let tag of data.tags;"
+            [nzMode]="'closeable'"
+            (nzAfterClose)="handleClose(tag, data)">
+            {{ sliceTagName(tag) }}
+          </nz-tag>
+          </ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="!editCache[data.key].edit">
+            {{data.age}}
+          </ng-container>
+          <ng-container *ngIf="editCache[data.key].edit">
+            <input type="text" nz-input [(ngModel)]="editCache[data.key].data.age">
+          </ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="!editCache[data.key].edit">
+            <span *ngFor="let hrefTag of data.hrefTags;let i = index;">
+                <nz-badge nzStatus="success" *ngIf="hrefTag.href">
+                  <a [href]="hrefTag.href" target="_blank">{{hrefTag.tag}}</a>
+                </nz-badge>
+                <nz-badge nzStatus="error" *ngIf="!hrefTag.href">
+                    <a>{{hrefTag.tag}}</a>
+                </nz-badge>
+                <nz-divider nzType="vertical" *ngIf="(i + 1) < data.hrefTags.length"></nz-divider>
+            </span>
+          </ng-container>
+          <ng-container *ngIf="editCache[data.key].edit">
+              <nz-tag
+              *ngFor="let hrefTag of data.hrefTags;"
+              [nzMode]="'closeable'"
+              (nzAfterClose)="handleClose(hrefTag.tag, data)">
+              {{ sliceTagName(hrefTag.tag) }}
+            </nz-tag>
+          </ng-container>
+        </td>
+        <td>
+          <div class="editable-row-operations">
+            <ng-container *ngIf="!editCache[data.key].edit">
+              <a (click)="startEdit(data.key)">编辑</a>
+              <nz-divider nzType="vertical"></nz-divider>
+              <a (click)="startEdit(data.key)">删除</a>
+            </ng-container>
+            <ng-container *ngIf="editCache[data.key].edit">
+              <a (click)="saveEdit(data.key)">保存</a>
+              <nz-divider nzType="vertical"></nz-divider>
+              <nz-popconfirm [nzTitle]="'确定取消?'" (nzOnConfirm)="cancelEdit(data.key)">
+                <a nz-popconfirm>取消</a>
+              </nz-popconfirm>
+            </ng-container>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-card>
+
+<app-platform-modal [isVisible]='isVisible' (onModalClosed)="getModalInfo($event)"></app-platform-modal>
+

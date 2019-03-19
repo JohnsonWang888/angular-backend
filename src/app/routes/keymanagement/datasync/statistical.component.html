@@ -1,0 +1,43 @@
+<form nz-form [formGroup]="validateForm" class="ant-advanced-search-form">
+    <nz-form-item>
+        <nz-form-label [nzSm]="6">Key</nz-form-label>
+        <nz-form-control [nzSm]="14">
+            <nz-select style="width: 100%;" formControlName="key" [(ngModel)]="selectedValue" nzAllowClear nzPlaceHolder="Choose">
+                <nz-option-group nzLabel="Manager">
+                    <nz-option nzValue="jack" nzLabel="Jack"></nz-option>
+                    <nz-option nzValue="lucy" nzLabel="Lucy"></nz-option>
+                </nz-option-group>
+                <nz-option-group nzLabel="Engineer">
+                    <nz-option nzValue="Tom" nzLabel="tom"></nz-option>
+                </nz-option-group>
+            </nz-select>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSm]="6">时间区间</nz-form-label>
+        <nz-form-control [nzSm]="14">
+            <nz-radio-group [(ngModel)]="radioValue" formControlName="date">
+                <label nz-radio nzValue="A">最近一小时</label>
+                <label nz-radio nzValue="B">最近一天</label>
+                <label nz-radio nzValue="C">最近一周</label>
+                <label nz-radio nzValue="D">自定义日期</label>
+            </nz-radio-group>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSm]="6">横坐标经度</nz-form-label>
+        <nz-form-control [nzSm]="14">
+            <nz-radio-group [(ngModel)]="radioValue" formControlName="xAixs">
+                <label nz-radio nzValue="E">分钟</label>
+                <label nz-radio nzValue="F">小时</label>
+                <label nz-radio nzValue="G">天</label>
+            </nz-radio-group>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSm]="6">请选择接口</nz-form-label>
+        <nz-form-control [nzSm]="14">
+            <input nz-input formControlName="interface">
+        </nz-form-control>
+    </nz-form-item>
+</form>

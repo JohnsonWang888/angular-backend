@@ -1,0 +1,64 @@
+<page-header [title]="'我的key'" [action]="action">
+    <ng-template #action>
+      <button nz-button [nzType]="'primary'" (click)="showModal()"><i nz-icon type="plus"></i>添加分组</button>
+    </ng-template>
+</page-header>
+
+<nz-collapse>
+  <nz-collapse-panel *ngFor="let panel of panels" [nzHeader]="header" [nzActive]="panel.active" [nzDisabled]="panel.disabled">
+
+    <nz-table 
+    #filterTable 
+    [nzData]="panel.data"
+    >
+      <thead (nzSortChange)="sort($event)">
+        <tr>
+          <th nzWidth="25%">Name</th>
+          <th nzWidth="15%" nzShowSort nzSortKey="age">Age</th>
+          <th nzWidth="40%">Address</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of filterTable.data">
+          <td>
+            {{data.name}}
+          </td>
+          <td>
+              {{data.age}}
+          </td>
+          <td>
+              {{data.address}}
+          </td>
+          <td>
+              <a (click)="editKey(data.key)">编辑</a>
+              <nz-divider nzType="vertical"></nz-divider>
+              <a (click)="delKey(data.key)">删除</a>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+
+    <ng-template #header>
+      <div nz-row>
+        <div nz-col nzSpan="8">
+          <p>{{panel.name}}</p>
+          <p>2019-01-31创建</p>
+        </div>
+        <div nz-col nzSpan="8" nzOffset="8" style="height: 72px;line-height: 72px;">
+          <p>
+            <a (click)="addKey($event, panel)"><i nz-icon type="plus" theme="outline"></i>新增</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a (click)="editGroup($event, panel)"><i nz-icon type="edit" theme="outline"></i>修改</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a (click)="delGroup($event, panel)"><i nz-icon type="delete" theme="outline"></i>删除</a>
+          </p>
+        </div>
+      </div>
+    </ng-template>
+
+  </nz-collapse-panel>
+</nz-collapse>
+
+
+<app-group-modal [isVisible]='isVisible' (onModalClosed)="getModalInfo($event)"></app-group-modal>
