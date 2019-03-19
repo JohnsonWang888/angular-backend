@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <p align="center">
   <a href="https://ng-alain.com">
     <img width="100" src="https://ng-alain.com/assets/img/logo-color.svg">
@@ -95,3 +96,7 @@ Thank you to all our backers! 🙏
 ### License
 
 The MIT License (see the [LICENSE](https://github.com/ng-alain/ng-alain/blob/master/LICENSE) file for the full text)
+=======
+# angular-backend
+后台管理系统
+>>>>>>> 08f6a41b35afbc95e5a12195de8b504235014d05
